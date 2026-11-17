@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # dependencies
 node_modules/
 
@@ -36,3 +37,14 @@ desktop.ini
 
 # nested clone of the GitHub repo (kept outside this repo)
 /website/
+=======
+node_modules
+.next
+out
+.env
+.env.local
+.env.*.local
+*.log
+.vercel
+public/uploads
+>>>>>>> 6ef55310b926b8304db243483f45c8bf859d5e1b

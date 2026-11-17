@@ -2,7 +2,11 @@ import bcrypt from 'bcryptjs';
 import { connectDB } from '@/lib/db';
 import { handler, json, readJson, ApiError, assertSameOrigin } from '@/lib/api';
 import { rateLimit, resetRateLimit, getClientIp } from '@/lib/rate-limit';
+<<<<<<< HEAD
 import { loginSchema } from '@/lib/content-schema';
+=======
+import { loginSchema } from '@/lib/validators';
+>>>>>>> 6ef55310b926b8304db243483f45c8bf859d5e1b
 import { createSessionToken, sessionCookieOptions, SESSION_COOKIE } from '@/lib/auth';
 import Admin from '@/models/Admin';
 
