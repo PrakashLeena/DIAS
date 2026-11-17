@@ -7,3 +7,6 @@ out
 *.log
 .vercel
 public/uploads
+
+# nested clone of the GitHub repo (kept outside this repo)
+/website/
