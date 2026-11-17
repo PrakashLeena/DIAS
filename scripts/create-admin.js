@@ -12,21 +12,12 @@ const email = (process.env.ADMIN_EMAIL || '').trim().toLowerCase();
 const password = process.env.ADMIN_PASSWORD || '';
 const reset = process.argv.includes('--reset');
 
-<<<<<<< HEAD
 if (!email || email.length < 3) {
   console.error('ADMIN_EMAIL (the admin username) is missing or too short.');
   process.exit(1);
 }
 if (password.length < 8) {
   console.error('ADMIN_PASSWORD must be at least 8 characters.');
-=======
-if (!email || !/^[^@\s]+@[^@\s]+$/.test(email)) {
-  console.error('ADMIN_EMAIL is missing or invalid.');
-  process.exit(1);
-}
-if (password.length < 10) {
-  console.error('ADMIN_PASSWORD must be at least 10 characters.');
->>>>>>> 6ef55310b926b8304db243483f45c8bf859d5e1b
   process.exit(1);
 }
 
