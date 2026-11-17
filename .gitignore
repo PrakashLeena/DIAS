@@ -1,12 +1,38 @@
-node_modules
-.next
-out
+# dependencies
+node_modules/
+
+# Next.js build output
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+
+# environment files — real secrets live here, never commit them (.env.example is the template)
 .env
 .env.local
 .env.*.local
+.env.production
+.env.development
+
+# local uploads (dev only; production uses Cloudinary)
+public/uploads/
+
+# logs & debug
 *.log
-.vercel
-public/uploads
+npm-debug.log*
+
+# hosting
+.vercel/
+
+# editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Claude Code local settings (launch.json is shared)
+.claude/settings.local.json
 
 # nested clone of the GitHub repo (kept outside this repo)
 /website/
