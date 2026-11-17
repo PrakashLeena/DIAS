@@ -106,17 +106,18 @@ export default function Header() {
         Skip to content
       </a>
       <div className="fixed inset-x-0 top-3 z-50 px-3 sm:top-4 sm:px-6">
-        <div className={`relative mx-auto flex h-[60px] max-w-[1240px] items-center justify-end gap-2 rounded-full px-2 transition-colors duration-300 sm:h-16 sm:px-3 ${pill}`} style={pillBorder}>
-          <Link href="/" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center" aria-label={site.name.ta}>
-            <span className={`block whitespace-nowrap text-[17px] leading-tight min-[420px]:text-[20px] sm:text-[27px] ${glass ? 'text-flame-200' : 'text-maroon-600'}`} style={DECO}>
+        <div className={`relative mx-auto flex h-[60px] max-w-[1240px] items-center justify-between gap-1 sm:justify-end sm:gap-2 rounded-full px-2 transition-colors duration-300 sm:h-16 sm:px-3 ${pill}`} style={pillBorder}>
+          {/* phones: [call] [name] [list]; wider screens: name centred, call + list on the right */}
+          <a href={telHref(contact.phones[0])} className="btn btn-gold btn-sm !h-[42px] shrink-0 whitespace-nowrap !px-3 sm:order-2 sm:!px-4" aria-label="Call owner">
+            <Phone className="h-4 w-4" aria-hidden />
+            <span className="hidden sm:inline">அழைக்க / Call</span>
+          </a>
+          <Link href="/" className="min-w-0 flex-1 px-1 text-center sm:absolute sm:left-1/2 sm:top-1/2 sm:flex-none sm:-translate-x-1/2 sm:-translate-y-1/2 sm:px-0" aria-label={site.name.ta}>
+            <span className={`block truncate text-[17px] leading-tight min-[400px]:text-[20px] sm:overflow-visible sm:whitespace-nowrap sm:text-[27px] ${glass ? 'text-flame-200' : 'text-maroon-600'}`} style={DECO}>
               {site.name.ta}
             </span>
           </Link>
-          <div className="flex items-center justify-end gap-1.5">
-            <a href={telHref(contact.phones[0])} className="btn btn-gold btn-sm !h-[42px] shrink-0 whitespace-nowrap !px-3 sm:!px-4" aria-label="Call owner">
-              <Phone className="h-4 w-4" aria-hidden />
-              <span className="hidden sm:inline">அழைக்க / Call</span>
-            </a>
+          <div className="flex items-center justify-end sm:order-3">
             <button type="button" onClick={() => setSheetOpen(true)} className={`relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${hover}`} aria-label={`Open selection list (${lines.length})`}>
               <ClipboardList className="h-5 w-5" aria-hidden />
               {lines.length > 0 && (
@@ -127,7 +128,7 @@ export default function Header() {
         </div>
 
         <nav aria-label="Categories" className={`mx-auto mt-2 max-w-[1240px] rounded-full px-2 transition-colors duration-300 ${pill}`} style={pillBorder}>
-          <ul ref={rail} className="flex overflow-x-auto py-1.5 scrollbar-none">
+          <ul ref={rail} className="flex overflow-x-auto py-1.5 scrollbar-none [-webkit-mask-image:linear-gradient(90deg,transparent,#000_6%,#000_94%,transparent)] [mask-image:linear-gradient(90deg,transparent,#000_6%,#000_94%,transparent)]">
             {categories.map((c) => renderLink(c, ''))}
             {loop && categories.map((c) => renderLink(c, 'dup'))}
           </ul>

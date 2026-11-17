@@ -215,21 +215,16 @@ function ItemGrid({ cat, items, subId, onZoom, selectable = true }) {
                 </div>
               )}
               {selectable && (
-                <div className="mt-auto p-3">
+                <div className="mt-auto p-2.5 sm:p-3">
                   {!qty ? (
-                    <button type="button" onClick={() => toggle(1)} className="btn btn-primary btn-sm w-full">
+                    <button type="button" onClick={() => toggle(1)} className="btn btn-primary btn-sm h-10 w-full !whitespace-normal !px-2 text-center leading-tight">
                       தேர்வு செய் / Select
                     </button>
                   ) : cat.qtyStepper ? (
-                    <div className="flex items-center justify-between gap-2">
-                      <Stepper qty={qty} onChange={toggle} />
-                      <button type="button" onClick={() => removeLine(key)} className="text-[12.5px] text-[#B3122E] underline">
-                        நீக்கு
-                      </button>
-                    </div>
+                    <Stepper qty={qty} onChange={toggle} block />
                   ) : (
-                    <button type="button" onClick={() => removeLine(key)} className="btn btn-secondary btn-sm w-full !border-maroon-600 !text-maroon-600">
-                      ✓ தேர்வு செய்யப்பட்டது / Selected
+                    <button type="button" onClick={() => removeLine(key)} className="btn btn-secondary btn-sm h-10 w-full !whitespace-normal !border-maroon-600 !px-2 text-center leading-tight !text-maroon-600">
+                      ✓ தேர்வு / Selected
                     </button>
                   )}
                 </div>

@@ -5,10 +5,12 @@
 // Call: direct tel: links to the owner's numbers.
 import Link from 'next/link';
 import { useEffect } from 'react';
+import { Phone } from 'lucide-react';
 import { useSite } from './SiteProvider';
 import { Bi } from './ui';
 import { CallButtons } from './Contact';
 import HowToOrder from './HowToOrder';
+import { WhatsAppIcon } from './icons';
 import { GREETING, buildOrderMessage, prettyPhone, telHref, waHref } from '@/lib/contact';
 
 function useWhatsAppHref() {
@@ -30,13 +32,13 @@ export default function ActionBar() {
           <div className={`mb-2 items-center gap-2 ${count ? 'flex' : 'hidden sm:flex'}`}>
             <button type="button" onClick={() => setSheetOpen(true)} className="flex min-w-0 flex-1 items-center justify-between rounded-lg bg-champagne-100 px-3 py-1.5 text-left text-[13.5px] font-medium text-ink-900">
               <span className="truncate">
-                {count ? `தேர்ந்தெடுத்தவை / Selected: ${count}` : 'எதுவும் தேர்வு செய்யப்படவில்லை / Nothing selected yet'}
+                {count ? `தேர்வு / Selected: ${count}` : 'எதுவும் தேர்வு செய்யப்படவில்லை / Nothing selected yet'}
               </span>
-              <span className="ml-2 shrink-0 text-maroon-600">பட்டியல் / List ▸</span>
+              <span className="ml-2 shrink-0 text-maroon-600">பட்டியல் ▸</span>
             </button>
             {count > 0 && (
               <button type="button" onClick={confirmClear} className="btn btn-danger btn-sm shrink-0 !min-h-[34px]" aria-label="Clear entire order">
-                ✕ அழி / Clear all
+                ✕ அழி / Clear
               </button>
             )}
           </div>
@@ -53,7 +55,7 @@ export default function ActionBar() {
               }}
               className="btn btn-whatsapp min-h-[50px] w-full !whitespace-normal !px-3 text-[14px] sm:flex-[2]"
             >
-              <span aria-hidden>💬</span>
+              <WhatsAppIcon className="h-6 w-6" />
               <span className="text-left leading-tight">
                 <span className="block">வாட்ஸ்அப் மூலம் ஆர்டர் அனுப்புக{count ? ` (${count})` : ''}</span>
                 <span className="block text-[11.5px] font-medium opacity-90">Send Selected Items via WhatsApp</span>
@@ -62,7 +64,7 @@ export default function ActionBar() {
             <div className="flex gap-2 sm:flex-1">
               {contact.phones.map((p) => (
                 <a key={p} href={telHref(p)} className="btn btn-call min-h-[46px] flex-1 !px-2 sm:min-h-[50px]" aria-label={`Call ${p}`}>
-                  <span aria-hidden>📞</span>
+                  <Phone className="h-4 w-4 shrink-0" aria-hidden />
                   <span className="text-left leading-tight">
                     <span className="hidden text-[11px] font-medium opacity-80 sm:block">அழைக்க / Call</span>
                     <span className="block text-[13.5px]">{prettyPhone(p)}</span>
@@ -173,7 +175,7 @@ function SelectionSheet({ whatsappHref }) {
             aria-disabled={!lines.length}
             className={`btn btn-whatsapp min-h-[54px] w-full ${lines.length ? '' : 'pointer-events-none opacity-50'}`}
           >
-            <span aria-hidden>💬</span>
+            <WhatsAppIcon className="h-6 w-6" />
             <span className="text-left leading-tight">
               <span className="block">வாட்ஸ்அப் மூலம் ஆர்டர் அனுப்புக</span>
               <span className="block text-[12px] font-medium opacity-90">Send Selected Items via WhatsApp</span>
@@ -187,9 +189,9 @@ function SelectionSheet({ whatsappHref }) {
 }
 
 /** Quantity stepper; going below 1 removes the line from the selection. */
-export function Stepper({ qty, onChange, max = 9999 }) {
+export function Stepper({ qty, onChange, max = 9999, block = false }) {
   return (
-    <div className="inline-flex items-center rounded-full border bg-white" style={{ borderColor: 'var(--border-strong)' }}>
+    <div className={`items-center rounded-full border bg-white ${block ? 'flex h-10 w-full justify-between' : 'inline-flex'}`} style={{ borderColor: 'var(--border-strong)' }}>
       <button type="button" onClick={() => onChange(Math.max(0, qty - 1))} className="grid h-9 w-9 place-items-center text-lg font-bold text-maroon-600" aria-label="Decrease quantity">
         −
       </button>
