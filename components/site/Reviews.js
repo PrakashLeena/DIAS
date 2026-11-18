@@ -1,6 +1,7 @@
 'use client';
 
 // Customer Ratings & Reviews: "Write a Review" form above the existing marquee of reviews.
+import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import { Stars } from './ui';
 
@@ -40,7 +41,7 @@ function Marquee({ items }) {
 
 const LABELS = ['', 'மோசம் / Poor', 'சுமார் / Fair', 'நன்று / Good', 'மிக நன்று / Very good', 'அருமை / Excellent'];
 
-export default function ReviewsSection({ initial }) {
+export default function ReviewsSection({ initial, standalone = false }) {
   const [reviews, setReviews] = useState(initial);
   const [form, setForm] = useState({ name: '', rating: 0, message: '', website: '' });
   const [hover, setHover] = useState(0);
@@ -81,9 +82,26 @@ export default function ReviewsSection({ initial }) {
   return (
     <section id="reviews" className="bg-ivory-100 py-14" aria-labelledby="reviews-title">
       <div className="mx-auto max-w-[1200px] px-4">
-        <h2 id="reviews-title" className="text-center text-[clamp(24px,4vw,36px)]">
-          வாடிக்கையாளர் மதிப்புரைகள் <span className="text-[0.55em] font-normal text-ink-500">/ Customer Ratings &amp; Reviews</span>
-        </h2>
+        {standalone && (
+          <Link href="/" className="mb-4 inline-flex items-center gap-1 text-sm font-semibold text-maroon-600">
+            ◂ முகப்பு / Home
+          </Link>
+        )}
+        {(() => {
+          const Heading = standalone ? 'h1' : 'h2';
+          return (
+            <Heading id="reviews-title" className="text-center text-[clamp(24px,4vw,36px)]">
+              வாடிக்கையாளர் மதிப்புரைகள் <span className="text-[0.55em] font-normal text-ink-500">/ Customer Ratings &amp; Reviews</span>
+            </Heading>
+          );
+        })()}
+        {!standalone && (
+          <p className="mt-1 text-center text-[13.5px]">
+            <Link href="/rating" className="font-semibold text-maroon-600 underline">
+              தனிப் பக்கத்தில் மதிப்பீடு செய்ய / Open the rating page ▸
+            </Link>
+          </p>
+        )}
         {reviews.length > 0 && (
           <p className="mt-2 flex items-center justify-center gap-2 text-ink-700">
             <Stars value={Math.round(avg)} size={20} />

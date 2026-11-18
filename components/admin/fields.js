@@ -1,7 +1,7 @@
 'use client';
 
 // Small reusable form pieces for the Admin Panel.
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export const uid = () => Math.random().toString(36).slice(2, 9);
 export const blankL = () => ({ ta: '', en: '' });
@@ -54,7 +54,7 @@ export function Check({ checked, onChange, children }) {
 }
 
 /** Photo thumbnail with Upload / Replace and Remove buttons. */
-export function ImageField({ value, onChange, emoji = '📷', label, compact = false }) {
+export function ImageField({ value, onChange, emoji = '📷', label, compact = false, showRemove = true }) {
   const input = useRef(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -87,9 +87,9 @@ export function ImageField({ value, onChange, emoji = '📷', label, compact = f
         </div>
         <div className="flex flex-wrap gap-1.5">
           <button type="button" className="btn btn-secondary btn-sm" onClick={() => input.current?.click()} disabled={busy}>
-            {busy ? '⏳ …' : value ? '🔄 Replace' : '⬆ Upload'}
+            {busy ? 'Uploading…' : value ? 'Change photo' : 'Upload photo'}
           </button>
-          {value && (
+          {value && showRemove && (
             <button type="button" className="btn btn-danger btn-sm" onClick={() => onChange('')} disabled={busy}>
               Remove
             </button>
@@ -99,6 +99,90 @@ export function ImageField({ value, onChange, emoji = '📷', label, compact = f
       <input ref={input} type="file" accept="image/jpeg,image/png,image/webp,image/avif" hidden onChange={(e) => pick(e.target.files?.[0])} />
       {error && <p className="mt-1 text-[12.5px] text-[#B3122E]">{error}</p>}
     </div>
+  );
+}
+
+/**
+ * "⋯" dropdown that holds the less-used / destructive actions.
+ * items: [{ label, onClick?, href?, danger?, disabled?, hidden? }]
+ */
+export function MoreMenu({ items, label = 'More actions', tone = 'light' }) {
+  const [open, setOpen] = useState(false);
+  const root = useRef(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e) => root.current && !root.current.contains(e.target) && setOpen(false);
+    const onKey = (e) => e.key === 'Escape' && setOpen(false);
+    document.addEventListener('mousedown', onDown);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onDown);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [open]);
+
+  const visible = items.filter((i) => !i.hidden);
+  const cls = 'block w-full px-3.5 py-2 text-left text-[14px] disabled:cursor-not-allowed disabled:opacity-40';
+  return (
+    <div ref={root} className="relative shrink-0">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-label={label}
+        title={label}
+        className={`grid h-9 w-9 place-items-center rounded-lg border text-lg leading-none ${tone === 'dark' ? 'border-white/30 text-[#FFF8EC] hover:bg-white/10' : 'bg-white text-ink-700 hover:bg-champagne-100'}`}
+        style={tone === 'dark' ? undefined : { borderColor: 'var(--border-strong)' }}
+      >
+        <span aria-hidden>⋯</span>
+      </button>
+      {open && (
+        <ul role="menu" className="absolute right-0 z-40 mt-1.5 w-52 overflow-hidden rounded-xl border bg-white py-1 text-ink-900 shadow-3" style={{ borderColor: 'var(--border-subtle)' }}>
+          {visible.map((it, i) => (
+            <li key={it.label} role="none" className={it.danger && i > 0 ? 'mt-1 border-t pt-1' : undefined} style={it.danger ? { borderColor: 'var(--border-subtle)' } : undefined}>
+              {it.href ? (
+                <a role="menuitem" href={it.href} target="_blank" rel="noopener noreferrer" className={`${cls} hover:bg-champagne-100`} onClick={() => setOpen(false)}>
+                  {it.label}
+                </a>
+              ) : (
+                <button
+                  type="button"
+                  role="menuitem"
+                  disabled={it.disabled}
+                  className={`${cls} ${it.danger ? 'text-[#B3122E] hover:bg-[#FBE7EA]' : 'hover:bg-champagne-100'}`}
+                  onClick={() => {
+                    setOpen(false);
+                    it.onClick?.();
+                  }}
+                >
+                  {it.label}
+                </button>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+/** Collapsible section (progressive disclosure). */
+export function Disclosure({ title, hint, defaultOpen = false, children }) {
+  return (
+    <details open={defaultOpen || undefined} className="group rounded-xl border bg-white" style={{ borderColor: 'var(--border-subtle)' }}>
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-[15px] font-semibold text-ink-900 [&::-webkit-details-marker]:hidden">
+        <span>
+          {title}
+          {hint && <span className="ml-2 text-[13px] font-normal text-ink-500">{hint}</span>}
+        </span>
+        <span className="text-ink-500 transition-transform group-open:rotate-180" aria-hidden>▾</span>
+      </summary>
+      <div className="border-t px-4 py-4" style={{ borderColor: 'var(--border-subtle)' }}>
+        {children}
+      </div>
+    </details>
   );
 }
 

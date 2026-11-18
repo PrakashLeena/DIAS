@@ -4,6 +4,7 @@ import { fontVariables } from '@/lib/fonts';
 export const metadata = {
   title: { default: 'Admin | Watson Decoration', template: '%s | Admin' },
   robots: { index: false, follow: false, nocache: true },
+  icons: { icon: '/favicon.png', apple: '/favicon.png' },
 };
 
 export const dynamic = 'force-dynamic';

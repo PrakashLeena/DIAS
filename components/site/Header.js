@@ -106,18 +106,22 @@ export default function Header() {
         Skip to content
       </a>
       <div className="fixed inset-x-0 top-3 z-50 px-3 sm:top-4 sm:px-6">
-        <div className={`relative mx-auto flex h-[60px] max-w-[1240px] items-center justify-between gap-1 sm:justify-end sm:gap-2 rounded-full px-2 transition-colors duration-300 sm:h-16 sm:px-3 ${pill}`} style={pillBorder}>
-          {/* phones: [call] [name] [list]; wider screens: name centred, call + list on the right */}
-          <a href={telHref(contact.phones[0])} className="btn btn-gold btn-sm !h-[42px] shrink-0 whitespace-nowrap !px-3 sm:order-2 sm:!px-4" aria-label="Call owner">
-            <Phone className="h-4 w-4" aria-hidden />
-            <span className="hidden sm:inline">அழைக்க / Call</span>
-          </a>
-          <Link href="/" className="min-w-0 flex-1 px-1 text-center sm:absolute sm:left-1/2 sm:top-1/2 sm:flex-none sm:-translate-x-1/2 sm:-translate-y-1/2 sm:px-0" aria-label={site.name.ta}>
-            <span className={`block truncate text-[17px] leading-tight min-[400px]:text-[20px] sm:overflow-visible sm:whitespace-nowrap sm:text-[27px] ${glass ? 'text-flame-200' : 'text-maroon-600'}`} style={DECO}>
+        <div className={`relative mx-auto flex h-[66px] max-w-[1240px] items-center justify-between gap-1 sm:gap-2 rounded-full px-2 transition-colors duration-300 sm:h-[76px] sm:px-3 ${pill}`} style={pillBorder}>
+          {/* [logo] [company name, centred] [call] [list] */}
+          <Link href="/" className="shrink-0" aria-label={`${site.name.ta} — home`}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.png" alt={`${site.name.ta} logo`} width={640} height={311} className="h-[40px] w-auto drop-shadow-[0_2px_6px_rgba(0,0,0,.35)] sm:h-[60px]" />
+          </Link>
+          <Link href="/" className="min-w-0 flex-1 px-1 text-center sm:pointer-events-none sm:absolute sm:left-1/2 sm:top-1/2 sm:flex-none sm:-translate-x-1/2 sm:-translate-y-1/2 sm:px-0" tabIndex={-1} aria-hidden="true">
+            <span className={`block truncate text-[16px] leading-tight min-[400px]:text-[18px] sm:overflow-visible sm:whitespace-nowrap sm:text-[27px] ${glass ? 'text-flame-200' : 'text-maroon-600'}`} style={DECO}>
               {site.name.ta}
             </span>
           </Link>
-          <div className="flex items-center justify-end sm:order-3">
+          <div className="flex shrink-0 items-center gap-1">
+            <a href={telHref(contact.phones[0])} className="btn btn-gold btn-sm !h-[42px] shrink-0 whitespace-nowrap !px-3 sm:!px-4" aria-label="Call owner">
+              <Phone className="h-4 w-4" aria-hidden />
+              <span className="hidden sm:inline">அழைக்க / Call</span>
+            </a>
             <button type="button" onClick={() => setSheetOpen(true)} className={`relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${hover}`} aria-label={`Open selection list (${lines.length})`}>
               <ClipboardList className="h-5 w-5" aria-hidden />
               {lines.length > 0 && (
@@ -134,7 +138,7 @@ export default function Header() {
           </ul>
         </nav>
       </div>
-      {!isHome && <div aria-hidden className="h-[128px] sm:h-[136px]" />}
+      {!isHome && <div aria-hidden className="h-[138px] sm:h-[152px]" />}
     </>
   );
 }

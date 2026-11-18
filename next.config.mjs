@@ -1,5 +1,22 @@
 /** @type {import('next').NextConfig} */
+const isDev = process.env.NODE_ENV !== 'production';
+const csp = [
+  "default-src 'self'",
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''}`,
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob: https://res.cloudinary.com",
+  "media-src 'self' https://res.cloudinary.com",
+  "font-src 'self' data:",
+  "connect-src 'self' https://api.cloudinary.com",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "frame-ancestors 'self'",
+  ...(isDev ? [] : ['upgrade-insecure-requests']),
+].join('; ');
+
 const securityHeaders = [
+  { key: 'Content-Security-Policy', value: csp },
   { key: 'X-Content-Type-Options', value: 'nosniff' },
   { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
   { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
@@ -19,6 +36,13 @@ const nextConfig = {
     ],
   },
   serverExternalPackages: ['mongoose'],
+  async redirects() {
+    return [
+      { source: '/review', destination: '/rating', permanent: true },
+      { source: '/reviews', destination: '/rating', permanent: true },
+      { source: '/ratings', destination: '/rating', permanent: true },
+    ];
+  },
   async headers() {
     return [
       { source: '/:path*', headers: securityHeaders },

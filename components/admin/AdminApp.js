@@ -4,7 +4,7 @@
 // Everything is edited in one content tree and saved with a single "Save" button.
 import { useEffect, useMemo, useState } from 'react';
 import CategoryEditor, { newCategory } from './CategoryEditor';
-import { BiInput, apiJson, move } from './fields';
+import { BiInput, MoreMenu, apiJson, move } from './fields';
 import { Stars } from '../site/ui';
 
 const TABS = [
@@ -72,23 +72,26 @@ export default function AdminApp({ initialContent, initialReviews, adminName }) 
   return (
     <div className="min-h-screen">
       <header className="sticky top-0 z-30 border-b bg-ink-900 text-[#FFF8EC] shadow-2" style={{ borderColor: 'rgba(255,255,255,.1)' }}>
-        <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-3 px-4 py-3">
+        <div className="mx-auto flex max-w-4xl flex-wrap items-center gap-3 px-4 py-3">
           <div className="min-w-0 flex-1">
             <h1 className="!text-[#FFE9B0] text-lg">நிர்வாகப் பகுதி <span className="text-sm font-normal text-[#FFF8EC]/70">/ Admin Dashboard</span></h1>
             <p className="truncate text-[12.5px] text-[#FFF8EC]/60">{adminName}</p>
           </div>
-          {dirty && <span className="rounded-full bg-gold-500 px-3 py-1 text-[12.5px] font-semibold text-ink-900">● Unsaved changes</span>}
-          <button type="button" onClick={save} disabled={!dirty || status.busy} className="btn btn-call btn-sm">
-            {status.busy ? 'Saving…' : '💾 Save / சேமி'}
+          {dirty && <span className="hidden rounded-full bg-gold-500/20 px-3 py-1 text-[12.5px] font-medium text-gold-300 sm:inline">● Unsaved changes</span>}
+          <button type="button" onClick={save} disabled={!dirty || status.busy} className="btn btn-call btn-sm" title={dirty ? 'Publish your changes to the website' : 'No changes to save'}>
+            {dirty && <span className="h-2 w-2 rounded-full bg-maroon-600 sm:hidden" aria-label="Unsaved changes" />}
+            {status.busy ? 'Saving…' : 'Save / சேமி'}
           </button>
-          <a href="/" target="_blank" rel="noopener noreferrer" className="btn btn-sm border-white/30 text-[#FFF8EC] hover:bg-white/10">
-            View site ↗
-          </a>
-          <button type="button" onClick={logout} className="btn btn-sm border-white/30 text-[#FFF8EC] hover:bg-white/10">
-            Logout
-          </button>
+          <MoreMenu
+            tone="dark"
+            label="More: view site, logout"
+            items={[
+              { label: 'View site ↗', href: '/' },
+              { label: 'Logout', onClick: logout, danger: true },
+            ]}
+          />
         </div>
-        <nav className="mx-auto flex max-w-5xl gap-1 overflow-x-auto px-3 scrollbar-none" aria-label="Admin sections">
+        <nav className="mx-auto flex max-w-4xl gap-1 overflow-x-auto px-3 scrollbar-none" aria-label="Admin sections">
           {TABS.map(([id, en, ta]) => (
             <button
               key={id}
@@ -104,14 +107,14 @@ export default function AdminApp({ initialContent, initialReviews, adminName }) 
       </header>
 
       {status.msg && (
-        <div className="mx-auto mt-3 max-w-5xl px-4">
+        <div className="mx-auto mt-3 max-w-4xl px-4">
           <p role={status.ok ? 'status' : 'alert'} className={`rounded-lg px-3 py-2 text-sm ${status.ok ? 'bg-[#E6F4EA] text-[#1a7d43]' : 'bg-[#FBE7EA] text-[#B3122E]'}`}>
             {status.msg}
           </p>
         </div>
       )}
 
-      <main className="mx-auto max-w-5xl px-4 py-6">
+      <main className="mx-auto max-w-4xl px-4 py-6">
         {tab === 'categories' && (
           <div className="space-y-4">
             <p className="rounded-xl bg-white p-4 text-[14px] text-ink-700 shadow-1">
@@ -151,8 +154,15 @@ export default function AdminApp({ initialContent, initialReviews, adminName }) 
                 {content.contact.phones.map((p, i) => (
                   <div key={i} className="flex gap-2">
                     <input className="field" value={p} inputMode="tel" aria-label={`Phone ${i + 1}`} placeholder="0760004755" onChange={(e) => setContact({ phones: content.contact.phones.map((x, k) => (k === i ? e.target.value : x)) })} />
-                    <button type="button" className="btn btn-danger btn-sm" disabled={content.contact.phones.length <= 1} onClick={() => setContact({ phones: content.contact.phones.filter((_, k) => k !== i) })}>
-                      Remove
+                    <button
+                      type="button"
+                      className="btn btn-danger !h-[46px] !w-[46px] shrink-0 !px-0"
+                      aria-label={`Remove phone number ${i + 1}`}
+                      title="Remove this number"
+                      disabled={content.contact.phones.length <= 1}
+                      onClick={() => setContact({ phones: content.contact.phones.filter((_, k) => k !== i) })}
+                    >
+                      <span aria-hidden>✕</span>
                     </button>
                   </div>
                 ))}

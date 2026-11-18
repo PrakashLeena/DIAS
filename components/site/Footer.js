@@ -22,6 +22,9 @@ export default function Footer() {
             </span>
           </WhatsAppButton>
         </div>
+        <Link href="/rating" className="text-[13.5px] font-medium text-gold-300 underline">
+          மதிப்பீடு செய்க / Rate us
+        </Link>
         <Link href="/admin" className="mt-2 text-[12.5px] text-[#FFF8EC]/50 underline hover:text-[#FFF8EC]">
           நிர்வாகம் / Admin
         </Link>

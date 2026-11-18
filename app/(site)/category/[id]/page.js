@@ -1,13 +1,26 @@
 import { notFound } from 'next/navigation';
 import { getContent } from '@/lib/content';
+import { BRAND, abs, breadcrumbJsonLd } from '@/lib/seo';
 import CategoryView from '@/components/site/CategoryView';
 import Footer from '@/components/site/Footer';
+import JsonLd from '@/components/site/JsonLd';
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
-  const { categories, site } = await getContent();
+  const { categories } = await getContent();
   const cat = categories.find((c) => c.id === id);
-  return cat ? { title: `${cat.name.ta} | ${cat.name.en} — ${site.name.en}` } : {};
+  if (!cat) return { title: 'Not found', robots: { index: false } };
+  const en = cat.name.en || cat.name.ta;
+  const title = `${cat.name.ta} — ${en} in Vankalai, Mannar`;
+  const description = `${en} (${cat.name.ta}) for weddings, church & kovil festivals, birthdays and events in Vankalai and Mannar, Sri Lanka. Choose items and send your order on WhatsApp — ${BRAND.ta}.`;
+  const image = cat.image ? (cat.image.startsWith('http') ? cat.image : abs(cat.image)) : abs('/og-image.jpg');
+  return {
+    title,
+    description,
+    alternates: { canonical: `/category/${cat.id}` },
+    openGraph: { type: 'website', url: `/category/${cat.id}`, title, description, images: [{ url: image, alt: `${en} — ${BRAND.en}` }] },
+    twitter: { card: 'summary_large_image', title, description, images: [image] },
+  };
 }
 
 export default async function CategoryPage({ params }) {
@@ -19,6 +32,7 @@ export default async function CategoryPage({ params }) {
     <>
       <CategoryView category={category} />
       <Footer />
+      <JsonLd data={breadcrumbJsonLd([[BRAND.en, '/'], [category.name.en || category.name.ta, `/category/${category.id}`]])} />
     </>
   );
 }

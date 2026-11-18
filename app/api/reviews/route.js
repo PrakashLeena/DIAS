@@ -2,7 +2,7 @@ import { connectDB } from '@/lib/db';
 import { handler, json, readJson, ApiError, assertSameOrigin } from '@/lib/api';
 import { rateLimit, getClientIp } from '@/lib/rate-limit';
 import { reviewSchema } from '@/lib/content-schema';
-import { toReview } from '@/lib/content';
+import { toReview, refreshReviews } from '@/lib/content';
 import WebsiteSettings from '@/models/WebsiteSettings';
 
 // Public: anyone can write a review. Rate limited + honeypot; stored newest-first (max 100 kept).
@@ -21,5 +21,6 @@ export const POST = handler(async (request) => {
     { $push: { testimonials: { $each: [{ name, rating, message, createdAt: new Date() }], $position: 0, $slice: 100 } } },
     { upsert: true, new: true, setDefaultsOnInsert: true }
   ).lean();
+  refreshReviews();
   return json({ ok: true, review: toReview(doc.testimonials[0]) }, { status: 201 });
 });
