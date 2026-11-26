@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { homeUi } from '@/lib/i18n/home-ui';
+import { BRAND } from '@/lib/seo';
 
 const SLIDES = [1, 2, 3, 4].map((n) => `/images/image-slider/slide-0${n}.webp`);
 const SLIDE_MS = 6500;
@@ -39,12 +40,16 @@ export default function HomeHero() {
       <div aria-hidden className="absolute inset-0" style={{ background: 'radial-gradient(ellipse 80% 70% at 50% 50%, rgba(20,8,10,.62), rgba(20,8,10,.35) 70%), linear-gradient(0deg, rgba(20,8,10,.6), transparent 35%)' }} />
 
       <div className="relative z-10 mx-auto flex max-w-3xl flex-col items-center px-5 pt-28 text-center" style={{ color: 'var(--text-on-dark)' }}>
-        <div className="sd-hero-deco sd-hero-eyebrow mb-3.5 text-[12px] font-medium uppercase tracking-[.22em]" style={{ color: 'var(--gold-300)' }}>
+        <p className="sd-hero-deco sd-hero-eyebrow mb-3.5 text-[12px] font-medium uppercase tracking-[.22em]" style={{ color: 'var(--gold-300)' }}>
           {hero.eyebrow}
-        </div>
+        </p>
         <h1 className="sd-hero-title sd-hero-deco m-0 text-[clamp(44px,6vw,88px)] leading-none" style={{ color: 'var(--text-on-dark)', fontWeight: 500 }}>
           {hero.title[0]}
           <i style={{ color: 'var(--flame-200)' }}>{hero.title[1]}</i>
+          <span className="mt-4 block font-sans text-[clamp(15px,2vw,19px)] font-medium leading-snug tracking-wide" style={{ color: 'var(--gold-300)' }}>
+            {BRAND.ta} · மன்னார் மாவட்டம்
+            <span className="block text-[0.85em] font-normal opacity-90">{BRAND.en} — Panthal &amp; decoration, Mannar District</span>
+          </span>
         </h1>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <button type="button" className="btn btn-gold" onClick={() => go('categories')}>

@@ -1,7 +1,7 @@
 import '@/styles/globals.css';
 import { fontVariables } from '@/lib/fonts';
 import { getContent } from '@/lib/content';
-import { BRAND, DEFAULT_DESCRIPTION, DEFAULT_TITLE, KEYWORDS, localBusinessJsonLd, siteUrl } from '@/lib/seo';
+import { BRAND, DEFAULT_DESCRIPTION, DEFAULT_TITLE, GEO, KEYWORDS, localBusinessJsonLd, siteUrl } from '@/lib/seo';
 import { SiteProvider } from '@/components/site/SiteProvider';
 import Header from '@/components/site/Header';
 import ActionBar from '@/components/site/ActionBar';
@@ -34,10 +34,10 @@ export async function generateMetadata() {
       url: '/',
       title: DEFAULT_TITLE,
       description: DEFAULT_DESCRIPTION,
-      images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: `${BRAND.ta} — ${BRAND.en}, Vankalai, Mannar` }],
+      images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: `${BRAND.ta} — ${BRAND.en}, Mannar District, Sri Lanka` }],
     },
     twitter: { card: 'summary_large_image', title: DEFAULT_TITLE, description: DEFAULT_DESCRIPTION, images: ['/og-image.jpg'] },
-    other: { 'geo.region': 'LK-4', 'geo.placename': 'Vankalai, Mannar', 'content-language': 'ta, en' },
+    other: { 'geo.region': 'LK-43', 'geo.placename': 'Mannar District, Sri Lanka', 'geo.position': `${GEO.latitude};${GEO.longitude}`, ICBM: `${GEO.latitude}, ${GEO.longitude}` },
   };
 }
 

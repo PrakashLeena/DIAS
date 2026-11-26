@@ -215,7 +215,7 @@ export function ButtonTypePicker({ value, onChange, name }) {
 }
 
 /** Asked when the admin adds a new category: name, sub-categories yes/no, and the button type. */
-export function NewCategoryDialog({ onClose, onCreate }) {
+export function NewCategoryDialog({ onClose, onCreate, existingIds = [] }) {
   const [name, setName] = useState(blankL());
   const [emoji, setEmoji] = useState('✨');
   const [hasSubs, setHasSubs] = useState(null);
@@ -233,7 +233,10 @@ export function NewCategoryDialog({ onClose, onCreate }) {
     if (!name.ta.trim() && !name.en.trim()) return setError('Please type the category name / பெயரை உள்ளிடவும்');
     if (hasSubs === null) return setError('Please answer: does this category need sub-categories?');
     if (stepper === null) return setError('Please choose the button type (Count or Tick)');
-    onCreate({ ...newCategory(), emoji: emoji || '✨', name, mode: hasSubs ? 'sub' : 'items', qtyStepper: stepper });
+    // Readable, search-friendly URL from the English name (e.g. /category/flower-decoration).
+    const slug = name.en.toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40);
+    const base = newCategory();
+    onCreate({ ...base, id: slug && !existingIds.includes(slug) ? slug : base.id, emoji: emoji || '✨', name, mode: hasSubs ? 'sub' : 'items', qtyStepper: stepper });
   };
 
   const choice = (active) => `flex-1 rounded-xl border-2 px-4 py-3 text-left transition-colors ${active ? 'border-maroon-600 bg-[#FFF6F3]' : 'border-champagne-200 bg-white hover:border-gold-500'}`;

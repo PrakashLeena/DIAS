@@ -4,7 +4,7 @@ import ReviewsSection from '@/components/site/Reviews';
 import Footer from '@/components/site/Footer';
 import JsonLd from '@/components/site/JsonLd';
 
-const title = "Customer Ratings & Reviews — Vankalai, Mannar";
+const title = "Customer Ratings & Reviews — Mannar District";
 const description = `Read what customers say about ${BRAND.en} (${BRAND.ta}) in Vankalai, Mannar, and share your own rating. வாடிக்கையாளர் மதிப்புரைகள் — உங்கள் கருத்தைப் பதிவிடுங்கள்.`;
 
 export const metadata = {

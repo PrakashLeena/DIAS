@@ -201,7 +201,7 @@ export default function AdminApp({ initialContent, initialReviews, adminName }) 
           </div>
         )}
       </main>
-      {adding && <NewCategoryDialog onClose={() => setAdding(false)} onCreate={createCategory} />}
+      {adding && <NewCategoryDialog onClose={() => setAdding(false)} onCreate={createCategory} existingIds={content.categories.map((c) => c.id)} />}
     </div>
   );
 }
