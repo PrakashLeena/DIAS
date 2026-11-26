@@ -3,7 +3,7 @@
 // Admin Panel (நிர்வாகப் பகுதி): categories & items, photos, contact numbers and reviews.
 // Everything is edited in one content tree and saved with a single "Save" button.
 import { useEffect, useMemo, useState } from 'react';
-import CategoryEditor, { newCategory } from './CategoryEditor';
+import CategoryEditor, { NewCategoryDialog } from './CategoryEditor';
 import { BiInput, MoreMenu, apiJson, move } from './fields';
 import { Stars } from '../site/ui';
 
@@ -18,6 +18,7 @@ export default function AdminApp({ initialContent, initialReviews, adminName }) 
   const [savedJson, setSavedJson] = useState(() => JSON.stringify(initialContent));
   const [tab, setTab] = useState('categories');
   const [openId, setOpenId] = useState(null);
+  const [adding, setAdding] = useState(false);
   const [reviews, setReviews] = useState(initialReviews);
   const [status, setStatus] = useState({ busy: false, msg: '', ok: true });
 
@@ -53,10 +54,11 @@ export default function AdminApp({ initialContent, initialReviews, adminName }) 
   const setCats = (fn) => setContent((c) => ({ ...c, categories: fn(c.categories) }));
   const setContact = (p) => setContent((c) => ({ ...c, contact: { ...c.contact, ...p } }));
 
-  const addCategory = () => {
-    const c = newCategory();
+  const createCategory = (c) => {
     setCats((list) => [...list, c]);
     setOpenId(c.id);
+    setAdding(false);
+    setTimeout(() => document.querySelector(`[data-cat-id="${c.id}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
   };
 
   const deleteReview = async (id) => {
@@ -134,7 +136,7 @@ export default function AdminApp({ initialContent, initialReviews, adminName }) 
                 onDelete={() => setCats((list) => list.filter((c) => c.id !== cat.id))}
               />
             ))}
-            <button type="button" onClick={addCategory} className="btn btn-primary w-full sm:w-auto">
+            <button type="button" onClick={() => setAdding(true)} className="btn btn-primary w-full sm:w-auto">
               + Add new category / புதிய வகை
             </button>
           </div>
@@ -199,6 +201,7 @@ export default function AdminApp({ initialContent, initialReviews, adminName }) 
           </div>
         )}
       </main>
+      {adding && <NewCategoryDialog onClose={() => setAdding(false)} onCreate={createCategory} />}
     </div>
   );
 }

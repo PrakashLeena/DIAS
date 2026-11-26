@@ -1,7 +1,8 @@
 'use client';
 
 // Small reusable form pieces for the Admin Panel.
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 export const uid = () => Math.random().toString(36).slice(2, 9);
 export const blankL = () => ({ ta: '', en: '' });
@@ -58,6 +59,7 @@ export function ImageField({ value, onChange, emoji = '📷', label, compact = f
   const input = useRef(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
+  const [preview, setPreview] = useState(false);
 
   const pick = async (file) => {
     if (!file) return;
@@ -77,14 +79,26 @@ export function ImageField({ value, onChange, emoji = '📷', label, compact = f
     <div className="min-w-0">
       {label && <span className="field-label">{label}</span>}
       <div className={`flex gap-2.5 ${compact ? 'flex-col' : 'items-start'}`}>
-        <div className={`grid shrink-0 place-items-center overflow-hidden rounded-lg border bg-champagne-100 ${compact ? 'h-24 w-full' : 'h-24 w-32'}`} style={{ borderColor: 'var(--border-subtle)' }}>
-          {value ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={value} alt="" className="h-full w-full object-cover" loading="lazy" />
-          ) : (
+        {value ? (
+          <button
+            type="button"
+            onClick={() => setPreview(true)}
+            title="Click to view the full photo"
+            aria-label="View full photo"
+            className={`group relative grid shrink-0 place-items-center overflow-hidden rounded-lg border bg-[#F3EDE2] ${compact ? 'aspect-[4/3] w-full' : 'h-32 w-44'}`}
+            style={{ borderColor: 'var(--border-subtle)' }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={value} alt="" className="h-full w-full object-contain" decoding="async" />
+            <span className="absolute bottom-1.5 right-1.5 rounded-full bg-black/60 px-2 py-0.5 text-[11.5px] font-medium text-white opacity-90 group-hover:opacity-100" aria-hidden>
+              🔍 View
+            </span>
+          </button>
+        ) : (
+          <div className={`grid shrink-0 place-items-center overflow-hidden rounded-lg border bg-champagne-100 ${compact ? 'aspect-[4/3] w-full' : 'h-32 w-44'}`} style={{ borderColor: 'var(--border-subtle)' }}>
             <span className="text-3xl opacity-70" aria-hidden>{emoji}</span>
-          )}
-        </div>
+          </div>
+        )}
         <div className="flex flex-wrap gap-1.5">
           <button type="button" className="btn btn-secondary btn-sm" onClick={() => input.current?.click()} disabled={busy}>
             {busy ? 'Uploading…' : value ? 'Change photo' : 'Upload photo'}
@@ -98,7 +112,36 @@ export function ImageField({ value, onChange, emoji = '📷', label, compact = f
       </div>
       <input ref={input} type="file" accept="image/jpeg,image/png,image/webp,image/avif" hidden onChange={(e) => pick(e.target.files?.[0])} />
       {error && <p className="mt-1 text-[12.5px] text-[#B3122E]">{error}</p>}
+      {preview && <ImagePreview src={value} onClose={() => setPreview(false)} />}
     </div>
+  );
+}
+
+/** Full-screen photo viewer (click outside / ✕ / Esc to close). */
+export function ImagePreview({ src, onClose }) {
+  useEffect(() => {
+    const onKey = (e) => e.key === 'Escape' && onClose();
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [onClose]);
+  if (!src || typeof document === 'undefined') return null;
+  return createPortal(
+    <div className="fixed inset-0 z-[90] flex flex-col items-center justify-center gap-3 bg-black/90 p-4" role="dialog" aria-modal="true" aria-label="Photo preview" onClick={onClose}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={src} alt="" className="max-h-[82vh] max-w-full rounded-xl object-contain shadow-3" onClick={(e) => e.stopPropagation()} />
+      <a href={src} target="_blank" rel="noopener noreferrer" className="rounded-full bg-white/15 px-4 py-1.5 text-[13px] text-white hover:bg-white/25" onClick={(e) => e.stopPropagation()}>
+        Open full size ↗
+      </a>
+      <button type="button" className="absolute right-4 top-4 grid h-11 w-11 place-items-center rounded-full bg-white/15 text-xl text-white hover:bg-white/25" onClick={onClose} aria-label="Close">
+        ✕
+      </button>
+    </div>,
+    document.body,
   );
 }
 
@@ -108,19 +151,46 @@ export function ImageField({ value, onChange, emoji = '📷', label, compact = f
  */
 export function MoreMenu({ items, label = 'More actions', tone = 'light' }) {
   const [open, setOpen] = useState(false);
+  const [pos, setPos] = useState(null);
   const root = useRef(null);
+  const menu = useRef(null);
+
+  // The menu is rendered in a portal with fixed positioning, so a parent card's
+  // overflow:hidden can never clip it. It opens upward when there is no room below.
+  const place = () => {
+    const r = root.current?.getBoundingClientRect();
+    if (!r) return;
+    const w = 208;
+    const h = menu.current?.offsetHeight || 200;
+    const below = window.innerHeight - r.bottom;
+    const up = below < h + 12 && r.top > below;
+    const left = Math.max(8, Math.min(r.right - w, window.innerWidth - w - 8));
+    setPos(up ? { left, bottom: window.innerHeight - r.top + 6 } : { left, top: r.bottom + 6 });
+  };
+
+  useLayoutEffect(() => {
+    if (open) place();
+    else setPos(null);
+  }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!open) return;
-    const onDown = (e) => root.current && !root.current.contains(e.target) && setOpen(false);
-    const onKey = (e) => e.key === 'Escape' && setOpen(false);
-    document.addEventListener('mousedown', onDown);
-    document.addEventListener('keydown', onKey);
-    return () => {
-      document.removeEventListener('mousedown', onDown);
-      document.removeEventListener('keydown', onKey);
+    const onDown = (e) => {
+      if (root.current?.contains(e.target) || menu.current?.contains(e.target)) return;
+      setOpen(false);
     };
-  }, [open]);
+    const onKey = (e) => e.key === 'Escape' && setOpen(false);
+    document.addEventListener('pointerdown', onDown);
+    document.addEventListener('keydown', onKey);
+    window.addEventListener('scroll', place, true);
+    window.addEventListener('resize', place);
+    return () => {
+      document.removeEventListener('pointerdown', onDown);
+      document.removeEventListener('keydown', onKey);
+      window.removeEventListener('scroll', place, true);
+      window.removeEventListener('resize', place);
+    };
+  }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const visible = items.filter((i) => !i.hidden);
   const cls = 'block w-full px-3.5 py-2 text-left text-[14px] disabled:cursor-not-allowed disabled:opacity-40';
@@ -138,8 +208,13 @@ export function MoreMenu({ items, label = 'More actions', tone = 'light' }) {
       >
         <span aria-hidden>⋯</span>
       </button>
-      {open && (
-        <ul role="menu" className="absolute right-0 z-40 mt-1.5 w-52 overflow-hidden rounded-xl border bg-white py-1 text-ink-900 shadow-3" style={{ borderColor: 'var(--border-subtle)' }}>
+      {open && typeof document !== 'undefined' && createPortal(
+        <ul
+          ref={menu}
+          role="menu"
+          className="fixed z-[70] w-52 overflow-hidden rounded-xl border bg-white py-1 text-ink-900 shadow-3"
+          style={{ borderColor: 'var(--border-subtle)', ...(pos || { top: 0, left: 0, visibility: 'hidden' }) }}
+        >
           {visible.map((it, i) => (
             <li key={it.label} role="none" className={it.danger && i > 0 ? 'mt-1 border-t pt-1' : undefined} style={it.danger ? { borderColor: 'var(--border-subtle)' } : undefined}>
               {it.href ? (
@@ -162,7 +237,8 @@ export function MoreMenu({ items, label = 'More actions', tone = 'light' }) {
               )}
             </li>
           ))}
-        </ul>
+        </ul>,
+        document.body,
       )}
     </div>
   );

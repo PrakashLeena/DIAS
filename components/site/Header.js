@@ -89,11 +89,11 @@ export default function Header() {
           href={`/category/${c.id}`}
           tabIndex={copy ? -1 : undefined}
           aria-current={active ? 'page' : undefined}
-          className={`flex items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 py-1.5 text-[14px] tracking-wide transition-colors [:lang(ta)_&]:px-2.5 [:lang(ta)_&]:text-[13px] [:lang(ta)_&]:tracking-normal ${
+          className={`flex items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 py-2 text-[16.5px] tracking-wide transition-colors sm:py-1.5 sm:text-[14px] [:lang(ta)_&]:px-3 [:lang(ta)_&]:text-[16px] [:lang(ta)_&]:tracking-normal sm:[:lang(ta)_&]:px-2.5 sm:[:lang(ta)_&]:text-[13px] ${
             active ? (glass ? 'bg-white/15' : 'bg-champagne-100 text-maroon-700') : hover
           }`}
         >
-          {Icon && <Icon className="h-4 w-4 shrink-0 opacity-80" aria-hidden />}
+          {Icon && <Icon className="h-[18px] w-[18px] shrink-0 opacity-80 sm:h-4 sm:w-4" aria-hidden />}
           {c.name.ta}
         </Link>
       </li>
@@ -138,7 +138,7 @@ export default function Header() {
           </ul>
         </nav>
       </div>
-      {!isHome && <div aria-hidden className="h-[138px] sm:h-[152px]" />}
+      {!isHome && <div aria-hidden className="h-[146px] sm:h-[152px]" />}
     </>
   );
 }
