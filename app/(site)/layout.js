@@ -1,4 +1,5 @@
 import '@/styles/globals.css';
+import '@/styles/preloader.css';
 import { fontVariables } from '@/lib/fonts';
 import { getContent } from '@/lib/content';
 import { BRAND, DEFAULT_DESCRIPTION, DEFAULT_TITLE, GEO, KEYWORDS, localBusinessJsonLd, siteUrl } from '@/lib/seo';
@@ -6,6 +7,7 @@ import { SiteProvider } from '@/components/site/SiteProvider';
 import Header from '@/components/site/Header';
 import ActionBar from '@/components/site/ActionBar';
 import JsonLd from '@/components/site/JsonLd';
+import Preloader from '@/components/site/Preloader';
 
 // Content is edited live from the Admin Panel, so pages are rendered per request.
 export const dynamic = 'force-dynamic';
@@ -44,8 +46,9 @@ export async function generateMetadata() {
 export default async function SiteLayout({ children }) {
   const content = await getContent();
   return (
-    <html lang="ta" className={fontVariables}>
+    <html lang="ta" className={fontVariables} suppressHydrationWarning>
       <body suppressHydrationWarning>
+        <Preloader name={content.site.name} />
         <SiteProvider content={content}>
           <Header />
           <main id="main">{children}</main>
