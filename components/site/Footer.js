@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useSite } from './SiteProvider';
 import { CallButtons, WhatsAppButton } from './Contact';
+import { WriteGoogleReviewLink } from './Reviews';
 
 export default function Footer() {
   const { site } = useSite();
@@ -22,7 +23,8 @@ export default function Footer() {
             </span>
           </WhatsAppButton>
         </div>
-        <Link href="/rating" className="text-[13.5px] font-medium text-gold-300 underline">
+        <WriteGoogleReviewLink className="btn btn-glass btn-sm" />
+        <Link href="/rating"className="text-[13.5px] font-medium text-gold-300 underline">
           மதிப்பீடு செய்க / Rate us
         </Link>
         <Link href="/admin" className="mt-2 text-[12.5px] text-[#FFF8EC]/50 underline hover:text-[#FFF8EC]">

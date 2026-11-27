@@ -4,7 +4,7 @@ const csp = [
   "default-src 'self'",
   `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''}`,
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob: https://res.cloudinary.com",
+  "img-src 'self' data: blob: https://res.cloudinary.com https://*.googleusercontent.com",
   "media-src 'self' https://res.cloudinary.com",
   "font-src 'self' data:",
   "connect-src 'self' https://api.cloudinary.com",
@@ -47,7 +47,8 @@ const nextConfig = {
     return [
       { source: '/:path*', headers: securityHeaders },
       { source: '/admin/:path*', headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }, { key: 'Cache-Control', value: 'no-store' }] },
-      { source: '/api/:path*', headers: [{ key: 'Cache-Control', value: 'no-store' }] },
+      // google-reviews sets its own s-maxage so the CDN can cache it for a few hours
+      { source: '/api/:path((?!google-reviews$).*)', headers: [{ key: 'Cache-Control', value: 'no-store' }] },
       { source: '/images/:path*', headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }] },
       { source: '/videos/:path*', headers: [{ key: 'Cache-Control', value: 'public, max-age=2592000' }] },
     ];
