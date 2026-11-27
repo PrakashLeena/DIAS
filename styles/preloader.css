@@ -239,7 +239,7 @@ html.wp-lock, html.wp-lock body { overflow: hidden; }
    the website then shows through the opening curtain. */
 #watson-preloader { background: none !important; }
 #watson-preloader::before { content: ''; position: absolute; inset: 0;
-  background: radial-gradient(circle at 50% 30%, #FFFDF9 0%, #FAF3E8 52%, #EFE2CE 100%);
+  background: radial-gradient(ellipse 90% 75% at 50% 42%, #FDFAF4 0%, #FBF7EF 45%, #F7EEDC 78%, #EFE1C2 100%);
   transition: opacity 1s cubic-bezier(0.65, 0, 0.35, 1) .1s; }
 #watson-preloader.is-revealing::before { opacity: 0; }
 html.wp-skip #watson-preloader, #watson-preloader.is-gone { display: none !important; }
@@ -268,27 +268,37 @@ html.wp-skip #watson-preloader, #watson-preloader.is-gone { display: none !impor
   .wp-ml, .wp-mr { width: 20rem; top: calc(50% - 4.7rem); }
 }
 
-.preloader-stage { width: 100%; max-width: 36rem; padding: 0 1.25rem; display: flex; flex-direction: column; align-items: center; text-align: center; }
-.wp-logo { display: grid; place-items: center; width: min(230px, 62vw); aspect-ratio: 640 / 330; margin-bottom: .55rem; padding: .5rem .85rem; border-radius: 22px;
-  background: rgba(255,255,255,.86); border: 2px solid rgba(212,148,42,.7); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-  animation: wpRing 2.8s ease-in-out infinite; }
-.wp-logo img { width: 100%; height: 100%; object-fit: contain; }
+.preloader-stage { box-sizing: border-box; width: 100%; max-width: 30rem; padding: 0 1.25rem; margin: 0 auto; display: flex; flex-direction: column; align-items: center; text-align: center; }
+.wp-logo { display: grid; place-items: center; width: min(230px, 60vw); aspect-ratio: 640 / 330; margin: 0 auto .7rem; padding: .5rem .85rem; border-radius: 22px;
+  background: #FFFFFF; border: 1.5px solid #D4A845; box-sizing: border-box;
+  box-shadow: 0 10px 30px -10px rgba(74,14,34,.28); animation: wpRing 2.8s ease-in-out infinite; }
+.wp-logo img { display: block; width: 100%; height: 100%; object-fit: contain; }
 @keyframes wpRing {
-  0%, 100% { box-shadow: 0 8px 24px -6px rgba(212,148,42,.22), 0 0 0 0 rgba(212,148,42,.24); }
-  50% { box-shadow: 0 8px 24px -6px rgba(212,148,42,.3), 0 0 0 9px rgba(212,148,42,0); }
+  0%, 100% { box-shadow: 0 10px 30px -10px rgba(74,14,34,.28), 0 0 0 0 rgba(212,168,69,.35); }
+  50% { box-shadow: 0 10px 30px -10px rgba(74,14,34,.28), 0 0 0 9px rgba(212,168,69,0); }
 }
-.wp-name-ta { margin: 0; font-family: var(--font-tamil-deco), var(--font-tamil-serif), serif; font-size: clamp(22px, 5.4vw, 30px); line-height: 1.2; color: #8B1E2D; }
-.wp-name-en { margin: .15rem 0 .25rem; font-family: var(--font-cormorant), Georgia, serif; font-size: clamp(14px, 3.4vw, 17px); font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: #1E293B; }
-#pandal-svg-wrapper { width: 100%; max-width: 370px; margin: .25rem 0; }
-@media (min-width: 640px) { #pandal-svg-wrapper { max-width: 440px; } }
+.wp-name-en { margin: 0 0 .35rem; font-family: var(--font-cormorant), Georgia, serif; font-size: clamp(15px, 3.8vw, 18px); font-weight: 600;
+  letter-spacing: .2em; text-transform: uppercase; color: #4A0E22; line-height: 1.3; }
+.wp-name-en::after { content: ''; display: block; width: 44px; height: 2px; margin: .45rem auto 0; border-radius: 2px; background: linear-gradient(90deg, transparent, #D4A845, transparent); }
+#pandal-svg-wrapper { width: 100%; max-width: 340px; margin: .1rem auto 0; }
+@media (min-width: 640px) { #pandal-svg-wrapper { max-width: 420px; } }
 .wp-scene-svg { display: block; width: 100%; height: auto; overflow: visible; }
-.wp-progress { width: 100%; max-width: 300px; margin-top: .25rem; }
-.wp-progress-row { display: flex; align-items: center; justify-content: space-between; gap: .75rem; margin-bottom: .4rem; font-size: 12.5px; font-weight: 500; color: rgba(30,41,59,.78); font-family: var(--font-tamil-sans), var(--font-jost), sans-serif; }
-#preloader-percent { font-weight: 600; color: #8B1E2D; font-variant-numeric: tabular-nums; }
-.wp-track { height: 6px; border-radius: 999px; background: rgba(30,41,59,.1); overflow: hidden; }
+.wp-progress { width: 100%; max-width: 280px; margin: .9rem auto 0; }
+.wp-progress-row { display: flex; align-items: baseline; justify-content: space-between; gap: .75rem; margin-bottom: .45rem;
+  font-family: var(--font-jost), system-ui, sans-serif; font-size: 12.5px; font-weight: 500; letter-spacing: .02em; color: #6B5A5C; text-align: left; }
+#preloader-status-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#preloader-percent { flex-shrink: 0; font-weight: 600; color: #8E1B3A; font-variant-numeric: tabular-nums; }
+.wp-track { height: 5px; border-radius: 999px; background: #EFE1C2; overflow: hidden; }
 #preloader-progress-bar { height: 100%; width: 100%; border-radius: 999px; transform: scaleX(0); transform-origin: left center;
-  background: linear-gradient(90deg, #D4942A, #8B1E2D, #D4942A); }
-.wp-skip-btn { margin-top: 1rem; padding: .35rem .9rem; border: 0; border-radius: 999px; background: transparent; font-size: 12.5px;
-  color: rgba(30,41,59,.6); cursor: pointer; font-family: var(--font-tamil-sans), var(--font-jost), sans-serif; opacity: 0; transition: opacity .4s ease; }
+  background: linear-gradient(90deg, #D4A845, #8E1B3A); }
+.wp-skip-btn { margin: .9rem auto 0; padding: .4rem 1rem; border: 1px solid transparent; border-radius: 999px; background: transparent;
+  font-family: var(--font-jost), system-ui, sans-serif; font-size: 12.5px; letter-spacing: .06em; color: #6B5A5C; cursor: pointer;
+  opacity: 0; transition: opacity .4s ease, color .2s, border-color .2s; }
 .wp-skip-btn.is-on { opacity: 1; }
-.wp-skip-btn:hover, .wp-skip-btn:focus-visible { color: #8B1E2D; background: rgba(212,148,42,.12); outline: none; }
+.wp-skip-btn:hover, .wp-skip-btn:focus-visible { color: #8E1B3A; border-color: #D4A845; outline: none; }
+/* Short phones: keep everything on one screen. */
+@media (max-height: 680px) {
+  .wp-logo { width: min(190px, 52vw); margin-bottom: .5rem; }
+  #pandal-svg-wrapper { max-width: 290px; }
+  .wp-progress { margin-top: .6rem; }
+}

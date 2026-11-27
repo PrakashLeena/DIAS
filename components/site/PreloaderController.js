@@ -6,11 +6,11 @@ const ANIM_MS = 4000; // length of the pandal build-up animation
 const MAX_MS = 8000; // never keep visitors waiting longer than this, even on a slow connection
 const SKIP_AFTER_MS = 1200;
 const STEPS = [
-  [24, 'பந்தல் தூண்கள் எழுகின்றன…'],
-  [50, 'மெரூன் & தங்க விதானம் விரிகிறது…'],
-  [78, 'மாவிலைத் தோரணம் கட்டப்படுகிறது…'],
-  [96, 'விளக்குகள் ஏற்றப்படுகின்றன…'],
-  [101, 'உங்கள் விழா தயார்!'],
+  [24, 'Raising the pandal pillars…'],
+  [50, 'Draping the maroon & gold canopy…'],
+  [78, 'Hanging the flower thoranam…'],
+  [96, 'Switching on the lights…'],
+  [101, 'Your celebration is ready!'],
 ];
 const message = (p) => STEPS.find(([max]) => p < max)[1];
 
