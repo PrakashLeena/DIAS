@@ -1,11 +1,11 @@
-import { getReviews } from '@/lib/content';
+import { loadGoogleReviews } from '@/lib/google-reviews';
 import { BRAND, breadcrumbJsonLd } from '@/lib/seo';
 import ReviewsSection from '@/components/site/Reviews';
 import Footer from '@/components/site/Footer';
 import JsonLd from '@/components/site/JsonLd';
 
-const title = "Customer Ratings & Reviews — Mannar District";
-const description = `Read what customers say about ${BRAND.en} (${BRAND.ta}) in Vankalai, Mannar, and share your own rating. வாடிக்கையாளர் மதிப்புரைகள் — உங்கள் கருத்தைப் பதிவிடுங்கள்.`;
+const title = "Google Reviews — Mannar District";
+const description = `Read Google reviews of ${BRAND.en} (${BRAND.ta}), panthal & decoration service in Mannar District, and write your own review on Google. வாடிக்கையாளர் மதிப்புரைகள்.`;
 
 export const metadata = {
   title,
@@ -16,12 +16,12 @@ export const metadata = {
 };
 
 export default async function RatingPage() {
-  const reviews = await getReviews();
+  const { data: google } = await loadGoogleReviews();
   return (
     <>
-      <ReviewsSection initial={reviews} standalone />
+      <ReviewsSection google={google} standalone />
       <Footer />
-      <JsonLd data={breadcrumbJsonLd([[BRAND.en, '/'], ['Ratings & Reviews', '/rating']])} />
+      <JsonLd data={breadcrumbJsonLd([[BRAND.en, '/'], ['Google Reviews', '/rating']])} />
     </>
   );
 }

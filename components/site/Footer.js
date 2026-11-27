@@ -24,8 +24,8 @@ export default function Footer() {
           </WhatsAppButton>
         </div>
         <WriteGoogleReviewLink className="btn btn-glass btn-sm" />
-        <Link href="/rating"className="text-[13.5px] font-medium text-gold-300 underline">
-          மதிப்பீடு செய்க / Rate us
+        <Link href="/rating" className="text-[13.5px] font-medium text-gold-300 underline">
+          மதிப்புரைகள் / Customer reviews
         </Link>
         <Link href="/admin" className="mt-2 text-[12.5px] text-[#FFF8EC]/50 underline hover:text-[#FFF8EC]">
           நிர்வாகம் / Admin
