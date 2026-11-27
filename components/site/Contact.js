@@ -11,11 +11,11 @@ export function CallButtons({ className = '', btnClass = '', label = true }) {
   return (
     <div className={`flex flex-wrap gap-2 ${className}`}>
       {contact.phones.map((p) => (
-        <a key={p} href={telHref(p)} className={`btn btn-call ${btnClass}`}>
+        <a key={p} href={telHref(p)} className={`btn btn-call min-w-[9.5rem] max-w-full !px-4 ${btnClass}`}>
           <Phone className="h-4 w-4 shrink-0" aria-hidden />
           <span className="leading-tight">
             {label && <span className="block text-[11px] font-medium opacity-80">அழைக்க / Call</span>}
-            <span className="block">{prettyPhone(p)}</span>
+            <span className="block whitespace-nowrap">{prettyPhone(p)}</span>
           </span>
         </a>
       ))}

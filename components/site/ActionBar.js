@@ -4,7 +4,7 @@
 // WhatsApp: formats the whole selection into one message and opens wa.me to the owner.
 // Call: direct tel: links to the owner's numbers.
 import Link from 'next/link';
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Phone } from 'lucide-react';
 import { useSite } from './SiteProvider';
 import { Bi } from './ui';
@@ -61,22 +61,85 @@ export default function ActionBar() {
                 <span className="block text-[11.5px] font-medium opacity-90">Send Selected Items via WhatsApp</span>
               </span>
             </a>
-            <div className="flex gap-2 sm:flex-1">
-              {contact.phones.map((p) => (
-                <a key={p} href={telHref(p)} className="btn btn-call min-h-[46px] flex-1 !px-2 sm:min-h-[50px]" aria-label={`Call ${p}`}>
-                  <Phone className="h-4 w-4 shrink-0" aria-hidden />
-                  <span className="text-left leading-tight">
-                    <span className="hidden text-[11px] font-medium opacity-80 sm:block">அழைக்க / Call</span>
-                    <span className="block text-[13.5px]">{prettyPhone(p)}</span>
-                  </span>
-                </a>
-              ))}
-            </div>
+            <CallGroup phones={contact.phones} />
           </div>
         </div>
       </div>
       <SelectionSheet whatsappHref={href} />
     </>
+  );
+}
+
+/**
+ * Call buttons in the bottom bar. One or two numbers: a button per number.
+ * Three or more: they no longer fit side by side on a phone, so below the `lg`
+ * breakpoint they collapse into one "Call" button that opens a list of all numbers.
+ */
+function CallGroup({ phones }) {
+  const many = phones.length > 2;
+  const [open, setOpen] = useState(false);
+  const root = useRef(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e) => root.current && !root.current.contains(e.target) && setOpen(false);
+    const onKey = (e) => e.key === 'Escape' && setOpen(false);
+    document.addEventListener('pointerdown', onDown);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('pointerdown', onDown);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [open]);
+
+  return (
+    <div ref={root} className={`relative flex min-w-0 gap-2 ${many ? 'sm:flex-1 lg:flex-[1.6]' : 'sm:flex-1'}`}>
+      {phones.map((p) => (
+        <a
+          key={p}
+          href={telHref(p)}
+          className={`btn btn-call min-h-[46px] min-w-0 flex-1 !px-2 sm:min-h-[50px] ${many ? 'hidden lg:inline-flex' : ''}`}
+          aria-label={`Call ${p}`}
+        >
+          <Phone className="h-4 w-4 shrink-0" aria-hidden />
+          <span className="text-left leading-tight">
+            <span className="hidden text-[11px] font-medium opacity-80 sm:block">அழைக்க / Call</span>
+            <span className="block whitespace-nowrap text-[13.5px]">{prettyPhone(p)}</span>
+          </span>
+        </a>
+      ))}
+
+      {many && (
+        <>
+          <button
+            type="button"
+            onClick={() => setOpen((o) => !o)}
+            aria-expanded={open}
+            aria-haspopup="true"
+            className="btn btn-call min-h-[46px] w-full !px-3 sm:min-h-[50px] lg:hidden"
+          >
+            <Phone className="h-4 w-4 shrink-0" aria-hidden />
+            <span className="leading-tight">அழைக்க / Call ({phones.length})</span>
+            <span aria-hidden className={`text-[11px] transition-transform ${open ? 'rotate-180' : ''}`}>▲</span>
+          </button>
+          {open && (
+            <ul className="absolute inset-x-0 bottom-full mb-2 space-y-1.5 rounded-2xl border bg-white p-2 shadow-3 lg:hidden" style={{ borderColor: 'var(--border-subtle)' }}>
+              {phones.map((p, i) => (
+                <li key={p}>
+                  <a href={telHref(p)} onClick={() => setOpen(false)} className="btn btn-call min-h-[48px] w-full justify-between !px-4">
+                    <span className="inline-flex items-center gap-2.5">
+                      <Phone className="h-4 w-4 shrink-0" aria-hidden />
+                      <span className="whitespace-nowrap text-[15px] font-semibold">{prettyPhone(p)}</span>
+                    </span>
+                    <span className="text-[11.5px] font-medium opacity-75">அழைக்க {i + 1}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+        </>
+      )}
+    </div>
   );
 }
 
