@@ -8,6 +8,8 @@
 import { PRELOADER_HTML } from './preloader-markup';
 import PreloaderController from './PreloaderController';
 
+const PRELOADER_NAME = 'Watson Decorations';
+
 const esc = (s = '') => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
 // Runs during HTML parsing, before the overlay is drawn: decides skip / lock scroll.
@@ -15,7 +17,9 @@ const esc = (s = '') => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<
 const BOOT = `(function(){var d=document.documentElement;try{var s=sessionStorage.getItem('wp-seen')==='1'||window.matchMedia('(prefers-reduced-motion: reduce)').matches;d.classList.add(s?'wp-skip':'wp-lock');}catch(e){d.classList.add('wp-lock');}setTimeout(function(){d.classList.remove('wp-lock');},9000);})();`;
 
 export default function Preloader({ name }) {
-  const html = PRELOADER_HTML.replace('__NAME_TA__', esc(name?.ta || 'வட்ஷன் பந்தல் சேவை')).replace('__NAME_EN__', esc(name?.en || 'Watson Panthal Sevai'));
+  // Name shown under the logo in the preloader. replaceAll: the placeholder appears more than once
+  // (visible text + logo alt), and a plain replace() left the visible one unfilled.
+  const html = PRELOADER_HTML.replaceAll('__NAME_TA__', esc(name?.ta || 'வட்ஷன் பந்தல் சேவை')).replaceAll('__NAME_EN__', esc(PRELOADER_NAME));
   return (
     <>
       <script dangerouslySetInnerHTML={{ __html: BOOT }} />
