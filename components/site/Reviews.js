@@ -19,11 +19,20 @@ export function GoogleG({ size = 18 }) {
 }
 
 /** Opens Google's own review page in a new tab (Google blocks embedding it in an iframe). */
+// Tamil + English on two lines, and allowed to wrap, so the button can never be wider
+// than a phone screen (a one-line label pushed the whole page sideways on mobile).
 export function WriteGoogleReviewLink({ className = 'btn btn-secondary btn-sm', children }) {
   return (
-    <a href={GOOGLE_REVIEW_URL} target="_blank" rel="noopener" className={className}>
-      <GoogleG size={16} />
-      {children ?? <span>Google மதிப்புரை எழுதுக / Write a Google review</span>}
+    <a href={GOOGLE_REVIEW_URL} target="_blank" rel="noopener" className={`${className} max-w-full !whitespace-normal py-2 text-center`}>
+      <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-white">
+        <GoogleG size={16} />
+      </span>
+      {children ?? (
+        <span className="min-w-0 text-left leading-tight">
+          <span className="block">Google இல் மதிப்புரை எழுதுக</span>
+          <span className="block text-[11px] font-medium normal-case tracking-normal opacity-85">Write a Google review</span>
+        </span>
+      )}
     </a>
   );
 }
@@ -50,7 +59,7 @@ function GoogleSummary({ g }) {
   const hasRating = typeof g.rating === 'number' && g.userRatingCount > 0;
   const n = g.userRatingCount;
   return (
-    <div className="mx-auto mt-6 flex max-w-2xl flex-col items-center gap-4 rounded-2xl border bg-white px-5 py-5 text-center shadow-2 sm:flex-row sm:justify-between sm:px-7 sm:text-left" style={{ borderColor: 'var(--border-gold)' }}>
+    <div className="mx-auto mt-6 flex max-w-2xl flex-col items-center gap-4 rounded-2xl border bg-white px-4 py-5 text-center shadow-2 sm:flex-row sm:justify-between sm:px-7 sm:text-left" style={{ borderColor: 'var(--border-gold)' }}>
       <div className="flex flex-col items-center gap-1.5 sm:items-start">
         <span className="inline-flex items-center gap-2 text-[15px] font-medium text-ink-900">
           <GoogleG size={22} /> Google Reviews
@@ -69,12 +78,10 @@ function GoogleSummary({ g }) {
           <span className="text-[13.5px] text-ink-500">எங்கள் சேவை பற்றி Google இல் கருத்துத் தெரிவியுங்கள் / Tell others about us on Google</span>
         )}
       </div>
-      <div className="flex flex-col items-center gap-2 sm:items-end">
-        <WriteGoogleReviewLink className="btn btn-primary">
-          <span>Google இல் மதிப்புரை எழுதுக / Write a review</span>
-        </WriteGoogleReviewLink>
+      <div className="flex w-full flex-col items-stretch gap-2 sm:w-auto sm:shrink-0 sm:items-end">
+        <WriteGoogleReviewLink className="btn btn-primary min-h-[52px] w-full sm:w-auto" />
         {g.googleMapsUri && (
-          <a href={g.googleMapsUri} target="_blank" rel="noopener" className="text-[13px] font-semibold text-maroon-600 underline">
+          <a href={g.googleMapsUri} target="_blank" rel="noopener" className="text-center text-[13px] font-semibold text-maroon-600 underline sm:text-right">
             அனைத்து மதிப்புரைகள் / See all reviews on Google ↗
           </a>
         )}
@@ -192,8 +199,8 @@ export default function ReviewsSection({ google: initialGoogle, standalone = fal
 
         {google.reviews.length > 0 && google.googleMapsUri && (
           <p className="mt-6 text-center">
-            <a href={google.googleMapsUri} target="_blank" rel="noopener" className="btn btn-secondary btn-sm">
-              <GoogleG size={16} /> அனைத்து Google மதிப்புரைகளும் / Read all reviews on Google
+            <a href={google.googleMapsUri} target="_blank" rel="noopener" className="btn btn-secondary btn-sm hidden max-w-full !whitespace-normal py-2 text-center sm:inline-flex">
+              <GoogleG size={16} /> <span>அனைத்து Google மதிப்புரைகளும் / Read all reviews on Google</span>
             </a>
           </p>
         )}

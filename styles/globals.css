@@ -104,3 +104,7 @@
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
 }
+
+/* Safety net: a too-wide element must never make the whole page scroll sideways on phones.
+   (clip, unlike hidden, does not create a scroll container, so sticky/fixed elements keep working.) */
+html, body { overflow-x: clip; }

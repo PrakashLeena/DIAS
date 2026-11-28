@@ -23,7 +23,7 @@ export default function Footer() {
             </span>
           </WhatsAppButton>
         </div>
-        <WriteGoogleReviewLink className="btn btn-glass btn-sm" />
+        <WriteGoogleReviewLink className="btn btn-glass min-h-[50px] w-full max-w-xs" />
         <Link href="/rating" className="text-[13.5px] font-medium text-gold-300 underline">
           மதிப்புரைகள் / Customer reviews
         </Link>
