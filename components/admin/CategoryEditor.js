@@ -103,7 +103,7 @@ export function ItemsEditor({ items, onChange, numbered, prefix, emoji, itemNoun
           <li
             key={it.id}
             data-row-id={it.id}
-            className={`grid gap-3 rounded-xl border bg-white p-3 transition-shadow sm:grid-cols-[220px_1fr_auto] ${fresh === it.id ? 'ring-2 ring-gold-500 shadow-2' : ''}`}
+            className={`relative grid gap-3 rounded-xl border bg-white p-3 transition-shadow sm:grid-cols-[220px_1fr_auto] ${fresh === it.id ? 'ring-2 ring-gold-500 shadow-2' : ''}`}
             style={{ borderColor: 'var(--border-subtle)' }}
           >
             {fresh === it.id && <span className="col-span-full -mb-1 text-[12.5px] font-semibold text-[#1a7d43]">✓ New {itemNoun} added here</span>}
@@ -126,6 +126,7 @@ export function ItemsEditor({ items, onChange, numbered, prefix, emoji, itemNoun
                 </>
               )}
             </div>
+            <div className="absolute right-5 top-5 z-10 sm:static">
             <MoreMenu
               label={`More actions for this ${itemNoun}`}
               items={[
@@ -135,6 +136,7 @@ export function ItemsEditor({ items, onChange, numbered, prefix, emoji, itemNoun
                 { label: `Delete ${itemNoun}`, danger: true, onClick: () => confirm(`Delete this ${itemNoun}?`) && onChange(items.filter((_, k) => k !== i)) },
               ]}
             />
+            </div>
           </li>
         ))}
       </ul>

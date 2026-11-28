@@ -78,14 +78,14 @@ export function ImageField({ value, onChange, emoji = '📷', label, compact = f
   return (
     <div className="min-w-0">
       {label && <span className="field-label">{label}</span>}
-      <div className={`flex gap-2.5 ${compact ? 'flex-col' : 'items-start'}`}>
+      <div className={`flex flex-col gap-2.5 ${compact ? '' : 'sm:flex-row sm:items-start'}`}>
         {value ? (
           <button
             type="button"
             onClick={() => setPreview(true)}
             title="Click to view the full photo"
             aria-label="View full photo"
-            className={`group relative grid shrink-0 place-items-center overflow-hidden rounded-lg border bg-[#F3EDE2] ${compact ? 'aspect-[4/3] w-full' : 'h-32 w-44'}`}
+            className={`group relative grid shrink-0 place-items-center overflow-hidden rounded-lg border bg-[#F3EDE2] ${compact ? 'aspect-[4/3] w-full' : 'aspect-[4/3] w-full sm:aspect-auto sm:h-32 sm:w-44'}`}
             style={{ borderColor: 'var(--border-subtle)' }}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -95,16 +95,16 @@ export function ImageField({ value, onChange, emoji = '📷', label, compact = f
             </span>
           </button>
         ) : (
-          <div className={`grid shrink-0 place-items-center overflow-hidden rounded-lg border bg-champagne-100 ${compact ? 'aspect-[4/3] w-full' : 'h-32 w-44'}`} style={{ borderColor: 'var(--border-subtle)' }}>
+          <div className={`grid shrink-0 place-items-center overflow-hidden rounded-lg border bg-champagne-100 ${compact ? 'aspect-[4/3] w-full' : 'aspect-[4/3] w-full sm:aspect-auto sm:h-32 sm:w-44'}`} style={{ borderColor: 'var(--border-subtle)' }}>
             <span className="text-3xl opacity-70" aria-hidden>{emoji}</span>
           </div>
         )}
-        <div className="flex flex-wrap gap-1.5">
-          <button type="button" className="btn btn-secondary btn-sm" onClick={() => input.current?.click()} disabled={busy}>
+        <div className={`flex gap-2 ${compact ? '' : 'sm:flex-col sm:items-stretch'}`}>
+          <button type="button" className="btn btn-secondary btn-sm min-w-0 flex-1 whitespace-nowrap sm:flex-none" onClick={() => input.current?.click()} disabled={busy}>
             {busy ? 'Uploading…' : value ? 'Change photo' : 'Upload photo'}
           </button>
           {value && showRemove && (
-            <button type="button" className="btn btn-danger btn-sm" onClick={() => onChange('')} disabled={busy}>
+            <button type="button" className="btn btn-danger btn-sm min-w-0 flex-1 sm:flex-none" onClick={() => onChange('')} disabled={busy}>
               Remove
             </button>
           )}

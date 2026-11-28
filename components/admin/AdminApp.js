@@ -7,10 +7,11 @@ import CategoryEditor, { NewCategoryDialog } from './CategoryEditor';
 import { BiInput, MoreMenu, apiJson, move } from './fields';
 import { Stars } from '../site/ui';
 
+// [id, icon, short label (phones), full label, Tamil]
 const TABS = [
-  ['categories', '🗂 Categories & Items', 'வகைகள் & பொருட்கள்'],
-  ['contact', '📞 Contact Info', 'தொடர்பு'],
-  ['reviews', '⭐ Reviews', 'மதிப்புரைகள்'],
+  ['categories', '🗂', 'Categories', 'Categories & Items', 'வகைகள் & பொருட்கள்'],
+  ['contact', '📞', 'Contact', 'Contact Info', 'தொடர்பு'],
+  ['reviews', '⭐', 'Reviews', 'Reviews', 'மதிப்புரைகள்'],
 ];
 
 export default function AdminApp({ initialContent, initialReviews, adminName }) {
@@ -93,16 +94,21 @@ export default function AdminApp({ initialContent, initialReviews, adminName }) 
             ]}
           />
         </div>
-        <nav className="mx-auto flex max-w-4xl gap-1 overflow-x-auto px-3 scrollbar-none" aria-label="Admin sections">
-          {TABS.map(([id, en, ta]) => (
+        {/* Phones: three equal tabs with short labels, so all of them are always visible. */}
+        <nav className="mx-auto grid max-w-4xl grid-cols-3 gap-1 px-2 sm:flex sm:px-3" aria-label="Admin sections">
+          {TABS.map(([id, icon, short, en, ta]) => (
             <button
               key={id}
               type="button"
               onClick={() => setTab(id)}
               aria-current={tab === id ? 'page' : undefined}
-              className={`shrink-0 rounded-t-lg px-4 py-2 text-[14px] font-semibold ${tab === id ? 'bg-[#F6F1E7] text-ink-900' : 'text-[#FFF8EC]/80 hover:bg-white/10'}`}
+              className={`flex min-w-0 items-center justify-center gap-1.5 rounded-t-lg px-2 py-2.5 text-[13.5px] font-semibold sm:shrink-0 sm:px-4 sm:py-2 sm:text-[14px] ${tab === id ? 'bg-[#F6F1E7] text-ink-900' : 'text-[#FFF8EC]/80 hover:bg-white/10'}`}
             >
-              {en} <span className="font-normal opacity-70">· {ta}</span>
+              <span aria-hidden>{icon}</span>
+              <span className="truncate sm:hidden">{short}</span>
+              <span className="hidden sm:inline">
+                {en} <span className="font-normal opacity-70">· {ta}</span>
+              </span>
             </button>
           ))}
         </nav>
